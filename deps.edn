@@ -1,3 +1,5 @@
 {:paths ["src"]
  :deps {ring/ring-core {:mvn/version "1.8.2"}
-        ring/ring-jetty-adapter {:mvn/version "1.8.2"}}}
+        ring/ring-jetty-adapter {:mvn/version "1.8.2"}
+        ring/ring-devel {:mvn/version "1.6.3"}
+        compojure/compojure {:mvn/version "1.7.0"}}}

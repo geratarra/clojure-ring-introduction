@@ -1,12 +1,13 @@
 (ns core
-    (:use ring.adapter.jetty))
+  (:require [ring.adapter.jetty :refer [run-jetty]]
+            [ring.middleware.reload :refer [wrap-reload]]
+            [ring.middleware.params :refer [wrap-params]]
+            [routes]))
 
-
-(defn handler [request]
-    {:status 200
-     :headers {"Content-Type" "text/plain"}
-     :body "Hello Wordl!"})
 
 (defn -main [& args]
-  (run-jetty handler {:port 3000
-                      :join? false}))
+  (println "Server started at port 3000")
+  (run-jetty (-> #'routes/app-routes
+                 wrap-params
+                 wrap-reload) {:port 3000
+                                      :join? false}))
