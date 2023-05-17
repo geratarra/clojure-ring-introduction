@@ -1,11 +1,11 @@
 (ns routes
-  (:require
-   [compojure.core :as compojure]
-   [compojure.route :as compojure-route]
-   [handlers]))
+  (:require [compojure.core :refer [defroutes GET]]
+            [compojure.route :refer [not-found]]
+            [handlers]
+            [ring.util.response :refer [redirect]]))
 
-(compojure/defroutes app-routes
-  (compojure/GET "/contacts" params handlers/contacts-handler)
-  (compojure/GET "/" params handlers/contacts-handler)
+(defroutes app-routes
+  (GET "/contacts" params handlers/contacts-handler)
+  (GET "/" params (redirect "/contacts"))
 
-  (compojure-route/not-found "Page not found"))
+  (not-found "Page not found"))
