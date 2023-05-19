@@ -1,6 +1,6 @@
 (ns core
-  (:require [ring.adapter.jetty :refer [run-jetty]]
-            [ring.middleware.reload :refer [wrap-reload]]
+  (:require [ring.middleware.reload :refer [wrap-reload]]
+            [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.params :refer [wrap-params]]
             [routes :refer [app-routes]]))
 
