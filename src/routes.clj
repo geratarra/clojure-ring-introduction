@@ -5,9 +5,9 @@
             [ring.util.response :refer [redirect]]))
 
 (defroutes app-routes
-  (GET "/contacts" params handlers/contacts-handler)
-  (GET "/contacts/new" params handlers/add-get-contact-handler)
-  (POST "/contacts/new" params handlers/add-post-contact-handler)
-  (GET "/" params (redirect "/contacts"))
-
+  (GET "/" request (redirect "/contacts"))
+  (GET "/contacts" request handlers/contacts-handler)
+  (GET "/contacts/new" request handlers/add-get-contact-handler)
+  (GET "/contacts/:id" request handlers/contact-details)
+  (POST "/contacts/new" request handlers/add-post-contact-handler)
   (not-found "Page not found"))

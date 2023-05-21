@@ -1,9 +1,13 @@
 (ns handlers
   (:require [clojure.string :refer [blank?]]
+            [clojure.walk :refer [keywordize-keys]]
             [hiccup.core :refer [html]]
-            [services.contacts-service :refer [contacts get-contact]]
+            [ring.util.response :refer [redirect]]
+            [services.contacts-service :refer [add-contact contacts
+                                               get-contact]]
             [templates.add-contact :refer [add-contact-form]]
-            [templates.index :refer [contacts-page]]))
+            [templates.contact-details :refer [contact-details-view]]
+            [templates.index :refer [contacts-view]]))
 
 (defn add-get-contact-handler [request]
   (clojure.pprint/pprint request)
@@ -11,11 +15,19 @@
 
 (defn add-post-contact-handler [request]
   (clojure.pprint/pprint request)
-  (html ""))
+  (let [contact (add-contact (keywordize-keys (:form-params request)) contacts)]
+    (if (:error contact)
+      (html (add-contact-form contact))
+      (redirect "/contacts"))))
 
-(defn contacts-handler [request] 
-  (clojure.pprint/pprint request)
+(defn contacts-handler [request]
   (let [query (get (:params request) "q")]
-    (if (blank? query) 
-      (html (contacts-page query contacts))
-      (html (contacts-page query (get-contact query contacts))))))
+    (println @contacts)
+    (if (blank? query)
+      (html (contacts-view query @contacts))
+      (html (contacts-view query (get-contact query @contacts))))))
+
+(defn contact-details [request]
+  (clojure.pprint/pprint request)
+  (html (contact-details-view (first (filter (fn [contact]
+                                               (= (:id contact) (Integer/parseInt (get-in request [:params :id])))) @contacts)))))

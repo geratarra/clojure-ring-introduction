@@ -8,22 +8,30 @@
                  [:p (label "email" "Email")
                   (text-field {:id "email"
                                :type "email"
-                               :placeholder "Email"} "email" (or (:email contact) ""))
-                  [:span {:class "error"} (:email (:errors contact))]]
+                               :placeholder "Email"} "email" (if (map? (:email contact))
+                                                               ""
+                                                               (:email contact)))
+                  [:span {:class "error"} (:error (:email contact))]]
                  [:p (label "first-name" "First Name")
                   (text-field {:id "first-name"
                                :type "text"
-                               :placeholder "First Name"} "first-name" (or (:first-name contact) ""))
-                  [:span {:class "error"} (:first-name (:errors contact))]]
+                               :placeholder "First Name"} "first-name" (if (map? (:first-name contact))
+                                                                         ""
+                                                                         (:first-name contact)))
+                  [:span {:class "error"} (:error (:first-name contact))]]
                  [:p (label "last-name" "Last Name")
                   (text-field {:id "last-name"
                                :type "text"
-                               :placeholder "Last Name"} "last-name" (or (:last-name contact) ""))
-                  [:span {:class "error"} (:last-name (:errors contact))]]
+                               :placeholder "Last Name"} "last-name" (if (map? (:last-name contact))
+                                                                       ""
+                                                                       (:last-name contact)))
+                  [:span {:class "error"} (:error (:last-name contact))]]
                  [:p (label "phone" "Phone")
                   (text-field {:id "phone"
                                :type "text"
-                               :placeholder "Phone"} "phone" (or (:phone contact) ""))
-                  [:span {:class "error"} (:phone (:errors contact))]]
+                               :placeholder "Phone"} "phone" (if (map? (:phone contact))
+                                                               ""
+                                                               (:phone contact)))
+                  [:span {:class "error"} (:error (:phone contact))]]
                  (submit-button "Save"))
    [:p [:a {:href "/contacts"} "Back"]]])

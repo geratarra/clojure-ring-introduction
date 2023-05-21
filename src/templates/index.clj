@@ -15,11 +15,13 @@
                    [:td (:first-name contact)]
                    [:td (:last-name contact)]
                    [:td (:phone contact)]
-                   [:td (:emai contact)]
-                   [:td [:a {:href (str "/contacts/" (:id contact) "/edit")} "Edit"]
+                   [:td (:email contact)]
+                   [:td
+                    [:a {:href (str "/contacts/" (:id contact) "/edit")} "Edit"]
+                    [:span "&nbsp;"]
                     [:a {:href (str "/contacts/" (:id contact))} "View"]]]) _contacts)]])
 
-(defn contacts-page [term _contacts]
+(defn contacts-view [term _contacts]
   [:div (search-form term)
    (contacts-table _contacts)
    [:p [:a {:href "/contacts/new"} "Add Contact"]]])
