@@ -1,9 +1,9 @@
-(ns templates.add-contact
+(ns templates.edit-contact
   (:require
    [hiccup.form :refer [form-to label text-field submit-button]]))
 
-(defn add-contact-form [contact]
-  [:div (form-to [:post "/contacts/new"]
+(defn edit-contact-form [contact]
+  [:div (form-to [:post (str "/contacts/" (:id contact) "/edit")]
                  [:fieldset
                   [:legend "Contact Values"]
                   [:p (label "email" "Email")
@@ -35,4 +35,6 @@
                                                                 (:phone contact)))
                    [:span {:class "error"} (:error (:phone contact))]]
                   (submit-button "Save")])
+   (form-to [:post (str "/contacts/" (:id contact) "/delete")]
+            [:button "Delete Contact"])
    [:p [:a {:href "/contacts"} "Back"]]])
