@@ -26,7 +26,7 @@
     (println @contacts)
     (if (blank? query)
       (html (contacts-view query @contacts))
-      (html (contacts-view query (get-contacts query :first-name @contacts))))))
+      (html (contacts-view query (get-contacts :first-name query @contacts))))))
 
 (defn contact-details-handler [request]
   (clojure.pprint/pprint request)
