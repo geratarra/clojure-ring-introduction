@@ -1,5 +1,13 @@
 (ns templates.index
-  (:require [hiccup.form :refer [form-to label submit-button]]))
+  (:require [hiccup.form :refer [form-to label submit-button]]
+            [hiccup.page :refer [html5]]))
+
+(defn create-html [head body]
+  (html5 [:html head [:body body]]))
+
+(defn create-head [& children]
+  (let [head [:head]]
+    (reduce (fn [acc child] (conj acc child)) head children)))
 
 (defn search-form [term]
   (form-to [:get "/contacts"]
