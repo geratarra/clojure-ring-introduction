@@ -20,7 +20,7 @@
   (filter (fn [contact] (= value (_key contact))) contacts))
 
 (defn add-contact [contact contacts]
-  (swap! contacts conj (assoc contact :id (inc (:id (last @contacts))))))
+  (swap! contacts conj (assoc contact :id (if (not-empty @contacts) (inc (:id (last @contacts))) 1))))
 
 (defn edit-contact [contact contacts]
   (let [index-of-contact (.indexOf @contacts (first (get-contacts :id (:id contact) @contacts)))]

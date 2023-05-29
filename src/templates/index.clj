@@ -3,7 +3,7 @@
             [hiccup.page :refer [html5]]))
 
 (defn create-html [head body]
-  (html5 [:html head [:body body]]))
+  (html5 [:html head [:body {:hx-boost "true"} body]]))
 
 (defn create-head [& children]
   (let [head [:head]]

@@ -1,9 +1,11 @@
 (ns templates.edit-contact
   (:require
+   [ring.util.anti-forgery :refer [anti-forgery-field]]
    [hiccup.form :refer [form-to label text-field submit-button]]))
 
 (defn edit-contact-form [contact]
   [:div (form-to [:post (str "/contacts/" (:id contact) "/edit")]
+                 (anti-forgery-field)
                  [:fieldset
                   [:legend "Contact Values"]
                   [:p (label "email" "Email")
@@ -36,5 +38,6 @@
                    [:span {:class "error"} (:error (:phone contact))]]
                   (submit-button "Save")])
    (form-to [:post (str "/contacts/" (:id contact) "/delete")]
-            [:button "Delete Contact"])
+            (anti-forgery-field)
+            [:button {:hx-delete (str "/contacts/" (:id contact)) :hx-target "body" :hx-push-url "true"} "Delete Contact"])
    [:p [:a {:href "/contacts"} "Back"]]])

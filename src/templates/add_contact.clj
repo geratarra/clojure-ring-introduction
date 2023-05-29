@@ -1,9 +1,11 @@
 (ns templates.add-contact
   (:require
+   [ring.util.anti-forgery :refer [anti-forgery-field]]
    [hiccup.form :refer [form-to label text-field submit-button]]))
 
 (defn add-contact-form [contact]
   [:div (form-to [:post "/contacts/new"]
+                 (anti-forgery-field)
                  [:fieldset
                   [:legend "Contact Values"]
                   [:p (label "email" "Email")
