@@ -19,8 +19,16 @@
 (defn get-contacts [_key value contacts]
   (filter (fn [contact] (= value (_key contact))) contacts))
 
+(defn validate-email-existence [contact contacts]
+  (if (not-empty (get-contacts :email (:email contact) contacts))
+    (assoc contact :error true :email {:error "Email already exists."})
+    contact))
+
 (defn add-contact [contact contacts]
-  (swap! contacts conj (assoc contact :id (if (not-empty @contacts) (inc (:id (last @contacts))) 1))))
+  (let [validated-contact (-> contact (validate-email-existence @contacts))]
+    (if (:error validated-contact)
+      validated-contact
+      (swap! contacts conj (assoc contact :id (if (not-empty @contacts) (inc (:id (last @contacts))) 1))))))
 
 (defn edit-contact [contact contacts]
   (let [index-of-contact (.indexOf @contacts (first (get-contacts :id (:id contact) @contacts)))]
