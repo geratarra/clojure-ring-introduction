@@ -1,4 +1,5 @@
-(ns services.contacts-service)
+(ns services.contacts-service 
+  (:require [clojure.pprint :as pprint]))
 
 (def contacts (atom [{:id 1
                       :first-name "Foo"
@@ -20,9 +21,11 @@
   (filter (fn [contact] (= value (_key contact))) contacts))
 
 (defn validate-email-existence [contact contacts]
-  (if (not-empty (get-contacts :email (:email contact) contacts))
-    (assoc contact :error true :email {:error "Email already exists."})
-    contact))
+  (let [current-contact (first (get-contacts :email (:email contact) contacts))] 
+    (if (and (not-empty current-contact)
+             (not= (:id contact) (:id current-contact)))
+      (assoc contact :error true :email {:error "Email already exists."})
+      contact)))
 
 (defn add-contact [contact contacts]
   (let [validated-contact (-> contact (validate-email-existence @contacts))]
@@ -31,12 +34,16 @@
       (swap! contacts conj (assoc contact :id (if (not-empty @contacts) (inc (:id (last @contacts))) 1))))))
 
 (defn edit-contact [contact contacts]
-  (let [index-of-contact (.indexOf @contacts (first (get-contacts :id (:id contact) @contacts)))]
-    (reset! contacts
-            (assoc-in (into [] @contacts)
-                      [index-of-contact]
-                      contact))
-    contact))
+  (let [index-of-contact (.indexOf @contacts (first (get-contacts :id (:id contact) @contacts)))
+        validated-contact (-> contact (validate-email-existence @contacts))]
+    (if (:error validated-contact)
+      validated-contact
+      (do
+        (reset! contacts
+                (assoc-in (into [] @contacts)
+                          [index-of-contact]
+                          contact))
+        contact))))
 
 (defn delete-contact [contact contacts]
   (reset! contacts (filter (fn [_contact] (not= (:id _contact) (:id contact))) @contacts)))
