@@ -1,5 +1,4 @@
-(ns services.contacts-service 
-  (:require [clojure.pprint :as pprint]))
+(ns services.contacts-service)
 
 (def contacts (atom [{:id 1
                       :first-name "Foo"
