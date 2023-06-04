@@ -5,7 +5,7 @@
    [hiccup.core :refer [html]]
    [ring.util.response :refer [redirect]]
    [services.contacts-service :refer [add-contact contacts
-                                      delete-contact edit-contact get-contacts]]
+                                      delete-contact edit-contact get-contacts validate-email-existence]]
    [templates.add-contact :refer [add-contact-form]]
    [templates.contact-details :refer [contact-details-view]]
    [templates.edit-contact :refer [edit-contact-form]]
@@ -35,7 +35,7 @@
                                             (= (:id contact) (Integer/parseInt (get-in request [:params :id])))) @contacts)))))
 
 (defn edit-post-contact-handler [request]
-  (let [contact (edit-contact (assoc (keywordize-keys (:params request)) :id (Integer/parseInt (get-in request [:params :id]))) contacts)]
+  (let [contact (edit-contact (assoc (:params request) :id (Integer/parseInt (get-in request [:params :id]))) contacts)]
     (if (:error contact)
       (html (edit-contact-form contact))
       (redirect "/contacts"))))
@@ -43,3 +43,10 @@
 (defn delete-contact-handler [request]
   (delete-contact (assoc (keywordize-keys (:params request)) :id (Integer/parseInt (get-in request [:params :id]))) contacts)
   (redirect "/contacts" 303))
+
+(defn validate-email-handler [request]
+  (let [contact (validate-email-existence (assoc (:params request) :id (Integer/parseInt (get-in request [:params :id]))) @contacts)
+        response {}]
+    (if (nil? (get-in contact [:email :error]))
+      (assoc response :status 200 :body "")
+      (assoc response :status 200 :body (get-in contact [:email :error])))))

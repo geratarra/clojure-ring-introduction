@@ -11,6 +11,8 @@
                   [:p (label "email" "Email")
                    (text-field {:id "email"
                                 :type "email"
+                                :hx-get (str "/contacts/" (:id contact) "/email")
+                                :hx-target "next .error"
                                 :placeholder "Email"} "email" (if (map? (:email contact))
                                                                 ""
                                                                 (:email contact)))
