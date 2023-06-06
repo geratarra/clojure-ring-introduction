@@ -45,7 +45,10 @@
   (redirect "/contacts" 303))
 
 (defn validate-email-handler [request]
-  (let [contact (validate-email-existence (assoc (:params request) :id (Integer/parseInt (get-in request [:params :id]))) @contacts)
+  (let [contact-id (if (= nil (get-in request [:params :id]))
+                     nil
+                     (Integer/parseInt (get-in request [:params :id])))
+        contact (validate-email-existence (assoc (:params request) :id contact-id) @contacts)
         response {}]
     (if (nil? (get-in contact [:email :error]))
       (assoc response :status 200 :body "")

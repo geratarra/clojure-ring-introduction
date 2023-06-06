@@ -11,6 +11,9 @@
                   [:p (label "email" "Email")
                    (text-field {:id "email"
                                 :type "email"
+                                :hx-get "/contacts/email/validate"
+                                :hx-target "next .error"
+                                :hx-trigger "change, keyup delay:200ms changed"
                                 :placeholder "Email"} "email" (if (map? (:email contact))
                                                                 ""
                                                                 (:email contact)))

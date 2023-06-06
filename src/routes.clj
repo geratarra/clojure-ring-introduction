@@ -14,4 +14,5 @@
   (DELETE "/contacts/:id" request handlers/delete-contact-handler)
   (POST "/contacts/new" request handlers/add-post-contact-handler)
   (GET "/contacts/:id/email" request handlers/validate-email-handler)
+  (GET "/contacts/email/validate" request handlers/validate-email-handler)
   (not-found "Page not found"))

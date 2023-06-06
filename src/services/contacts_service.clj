@@ -20,7 +20,7 @@
   (filter (fn [contact] (= value (_key contact))) contacts))
 
 (defn validate-email-existence [contact contacts]
-  (let [current-contact (first (get-contacts :email (:email contact) contacts))] 
+  (let [current-contact (first (get-contacts :email (:email contact) contacts))]
     (if (and (not-empty current-contact)
              (not= (:id contact) (:id current-contact)))
       (assoc contact :error true :email {:error "Email already exists."})
