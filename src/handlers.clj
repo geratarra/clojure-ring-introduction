@@ -4,7 +4,7 @@
    [clojure.walk :refer [keywordize-keys]]
    [hiccup.core :refer [html]]
    [ring.util.response :refer [redirect]]
-   [services.contacts-service :refer [add-contact contacts
+   [services.contacts-service :refer [add-contact contacts calculate-end-contacts-index
                                       delete-contact edit-contact get-contacts validate-email-existence]]
    [templates.add-contact :refer [add-contact-form]]
    [templates.contact-details :refer [contact-details-view]]
@@ -21,10 +21,14 @@
       (redirect "/contacts" 303))))
 
 (defn contacts-handler [request]
-  (let [query (get-in request [:params :q])]
+  (let [query (get-in request [:params :q])
+        page (if (empty? (get-in request [:params :page]))
+               1
+               (Integer/parseInt (get-in request [:params :page])))
+        contacts (subvec @contacts (- (* page 10) 10) (calculate-end-contacts-index page @contacts))]
     (if (blank? query)
-      (html (contacts-view query @contacts))
-      (html (contacts-view query (get-contacts :first-name query @contacts))))))
+      (html (contacts-view query contacts page))
+      (html (contacts-view query (get-contacts :first-name query @contacts) page)))))
 
 (defn contact-details-handler [request]
   (html (contact-details-view (first (filter (fn [contact]
