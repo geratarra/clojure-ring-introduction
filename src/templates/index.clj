@@ -16,7 +16,7 @@
            (submit-button "Search")))
 
 (defn contacts-table [contacts page]
-  [:table
+  [:table {:style "border-collapse: separate; border-spacing: 0em 6em;"}
    [:thead [:tr [:th "First"] [:th "Last"] [:th "Phone"] [:th "Email"]]]
    [:tbody (map (fn [contact]
                   [:tr
@@ -30,23 +30,13 @@
                     [:a {:href (str "/contacts/" (:id contact))} "View"]]]) contacts)
     (if (= 10 (count contacts))
      [:tr [:td {:colspan "5" :style "text-align: center;"}
-           [:button {:hx-target "closest tr"
-                     :hx-swap "outerHTML"
-                     :hx-select "tbody > tr"
-                     :hx-push-url "true"
-                     :hx-get (str "/contacts?page=" (+ page 1))} "Load more"]]]
+           [:span {:hx-target "closest tr"
+                   :hx-swap "outerHTML"
+                   :hx-trigger "revealed"
+                   :hx-select "tbody > tr"
+                   :hx-push-url "true"
+                   :hx-get (str "/contacts?page=" (+ page 1))} "Load more"]]]
      nil)]])
-
-(defn pagination-controls [page contacts]
-  [:div
-   [:span
-    (if (> page 1)
-      [:a {:href (str "/contacts?page=" (- page 1))} "Previous"]
-      nil)]
-   [:span
-    (if (= (count contacts) 10)
-      [:a {:href (str "/contacts?page=" (inc page))} "Next"]
-      nil)]])
 
 (defn contacts-view [term contacts page]
   [:div (search-form term)
