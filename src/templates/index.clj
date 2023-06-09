@@ -15,7 +15,7 @@
            [:input {:type "search" :id "search" :name "q" :value term}]
            (submit-button "Search")))
 
-(defn contacts-table [contacts]
+(defn contacts-table [contacts page]
   [:table
    [:thead [:tr [:th "First"] [:th "Last"] [:th "Phone"] [:th "Email"]]]
    [:tbody (map (fn [contact]
@@ -27,7 +27,15 @@
                    [:td
                     [:a {:href (str "/contacts/" (:id contact) "/edit")} "Edit"]
                     [:span "&nbsp;"]
-                    [:a {:href (str "/contacts/" (:id contact))} "View"]]]) contacts)]])
+                    [:a {:href (str "/contacts/" (:id contact))} "View"]]]) contacts)
+    (if (= 10 (count contacts))
+     [:tr [:td {:colspan "5" :style "text-align: center;"}
+           [:button {:hx-target "closest tr"
+                     :hx-swap "outerHTML"
+                     :hx-select "tbody > tr"
+                     :hx-push-url "true"
+                     :hx-get (str "/contacts?page=" (+ page 1))} "Load more"]]]
+     nil)]])
 
 (defn pagination-controls [page contacts]
   [:div
@@ -42,6 +50,5 @@
 
 (defn contacts-view [term contacts page]
   [:div (search-form term)
-   (contacts-table contacts)
-   (pagination-controls page contacts)
+   (contacts-table contacts page)
    [:p [:a {:href "/contacts/new"} "Add Contact"]]])
