@@ -1,15 +1,14 @@
 (ns handlers
-  (:require
-   [clojure.string :refer [blank?]]
-   [clojure.walk :refer [keywordize-keys]]
-   [hiccup.core :refer [html]]
-   [ring.util.response :refer [redirect]]
-   [services.contacts-service :refer [add-contact contacts calculate-end-contacts-index
-                                      delete-contact edit-contact get-contacts validate-email-existence]]
-   [templates.add-contact :refer [add-contact-form]]
-   [templates.contact-details :refer [contact-details-view]]
-   [templates.edit-contact :refer [edit-contact-form]]
-   [templates.index :refer [contacts-view]]))
+  (:require [clojure.walk :refer [keywordize-keys]]
+            [hiccup.core :refer [html]]
+            [ring.util.response :refer [redirect]]
+            [services.contacts-service :refer [add-contact
+                                               calculate-end-contacts-index contacts
+                                               delete-contact edit-contact get-contacts validate-email-existence]]
+            [templates.add-contact :refer [add-contact-form]]
+            [templates.contact-details :refer [contact-details-view]]
+            [templates.edit-contact :refer [edit-contact-form]]
+            [templates.index :refer [contacts-view]]))
 
 (defn add-get-contact-handler [request]
   (html (add-contact-form {})))
@@ -25,10 +24,9 @@
         page (if (empty? (get-in request [:params :page]))
                1
                (Integer/parseInt (get-in request [:params :page])))
-        contacts (subvec @contacts (- (* page 10) 10) (calculate-end-contacts-index page @contacts))]
-    (if (blank? query)
-      (html (contacts-view query contacts page))
-      (html (contacts-view query (get-contacts :first-name query @contacts) page)))))
+        filtered-contacts (get-contacts :first-name query @contacts)
+        contacts-split (subvec filtered-contacts (- (* page 10) 10) (calculate-end-contacts-index page filtered-contacts))]
+    (html (contacts-view query contacts-split page))))
 
 (defn contact-details-handler [request]
   (html (contact-details-view (first (filter (fn [contact]

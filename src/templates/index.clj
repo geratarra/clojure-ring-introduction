@@ -12,7 +12,14 @@
 (defn search-form [term]
   (form-to [:get "/contacts"]
            (label "q" "Search Term")
-           [:input {:type "search" :id "search" :name "q" :value term}]
+           [:input {:type "search"
+                    :id "search"
+                    :name "q"
+                    :value term
+                    :hx-get "/contacts"
+                    :hx-trigger "keyup delay:300ms changed, search"
+                    :hx-target "tbody"
+                    :hx-select "tbody tr"}]
            (submit-button "Search")))
 
 (defn contacts-table [contacts page]
@@ -29,14 +36,14 @@
                     [:span "&nbsp;"]
                     [:a {:href (str "/contacts/" (:id contact))} "View"]]]) contacts)
     (if (= 10 (count contacts))
-     [:tr [:td {:colspan "5" :style "text-align: center;"}
-           [:span {:hx-target "closest tr"
-                   :hx-swap "outerHTML"
-                   :hx-trigger "revealed"
-                   :hx-select "tbody > tr"
-                   :hx-push-url "true"
-                   :hx-get (str "/contacts?page=" (+ page 1))} "Load more"]]]
-     nil)]])
+      [:tr [:td {:colspan "5" :style "text-align: center;"}
+            [:span {:hx-target "closest tr"
+                    :hx-swap "outerHTML"
+                    :hx-trigger "revealed"
+                    :hx-select "tbody > tr"
+                    :hx-push-url "true"
+                    :hx-get (str "/contacts?page=" (+ page 1))} "Load more"]]]
+      nil)]])
 
 (defn contacts-view [term contacts page]
   [:div (search-form term)
