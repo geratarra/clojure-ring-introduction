@@ -8,7 +8,7 @@
             [templates.add-contact :refer [add-contact-form]]
             [templates.contact-details :refer [contact-details-view]]
             [templates.edit-contact :refer [edit-contact-form]]
-            [templates.index :refer [contacts-view]]))
+            [templates.index :refer [contact-rows contacts-view]]))
 
 (defn add-get-contact-handler [request]
   (html (add-contact-form {})))
@@ -25,8 +25,12 @@
                1
                (Integer/parseInt (get-in request [:params :page])))
         filtered-contacts (get-contacts :first-name query @contacts)
-        contacts-split (subvec filtered-contacts (- (* page 10) 10) (calculate-end-contacts-index page filtered-contacts))]
-    (html (contacts-view query contacts-split page))))
+        contacts-split (subvec filtered-contacts (- (* page 10) 10) (calculate-end-contacts-index page filtered-contacts))
+        hx-trigger (get-in (keywordize-keys request) [:headers :hx-trigger])
+        html-response (if (or (= hx-trigger "search") (= hx-trigger "load-more"))
+                        {:body (html (contact-rows contacts-split page)) :status 200 :headers {"Content-Type" "text/html; charset=utf-8"}}
+                        {:body (html (contacts-view query contacts-split page)) :status 200 :headers {"Content-Type" "text/html; charset=utf-8"} :include-base-template true})] 
+    html-response))
 
 (defn contact-details-handler [request]
   (html (contact-details-view (first (filter (fn [contact]

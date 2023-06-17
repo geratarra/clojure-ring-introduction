@@ -1,5 +1,4 @@
-(ns services.contacts-service 
-  (:require [clojure.string :refer [blank?]]))
+(ns services.contacts-service)
 
 (def contacts (atom [{:id 1 :first-name "Foo" :last-name "Bar" :phone "123456789" :email "test@test.com"}
                      {:id 2 :first-name "Bee" :last-name "Lol" :phone "123456789" :email "bee@test.com"}
@@ -48,7 +47,7 @@
                      {:id 45, :first-name "name45", :last-name "lastname45", :phone "12345-45", :email "test45@test.com"}]))
 
 (defn get-contacts [_key value contacts]
-  (if (blank? value)
+  (if (nil? value)
     (into [] contacts)
     (into [] (filter (fn [contact] (= value (_key contact))) contacts))))
 

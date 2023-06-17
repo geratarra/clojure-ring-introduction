@@ -19,33 +19,37 @@
                     :hx-get "/contacts"
                     :hx-trigger "keyup delay:300ms changed, search"
                     :hx-target "tbody"
-                    :hx-select "tbody tr"}]
+                    :hx-push-url "true"}]
            (submit-button "Search")))
+
+(defn contact-rows [contacts page]
+  (let [rows (into [] (map (fn [contact]
+                             [:tr
+                              [:td (:first-name contact)]
+                              [:td (:last-name contact)]
+                              [:td (:phone contact)]
+                              [:td (:email contact)]
+                              [:td
+                               [:a {:href (str "/contacts/" (:id contact) "/edit")} "Edit"]
+                               [:span "&nbsp;"]
+                               [:a {:href (str "/contacts/" (:id contact))} "View"]]]) contacts))
+        scroll-row (when (= 10 (count contacts))
+                     [:tr [:td {:colspan "5" :style "text-align: center;"}
+                           [:span {:id "load-more"
+                                   :hx-target "closest tr"
+                                   :hx-swap "outerHTML"
+                                   :hx-trigger "revealed"
+                                   :hx-push-url "true"
+                                   :hx-get (str "/contacts?page=" (+ page 1))} "Load more"]]])]
+    (apply list (conj rows scroll-row))))
 
 (defn contacts-table [contacts page]
   [:table {:style "border-collapse: separate; border-spacing: 0em 6em;"}
    [:thead [:tr [:th "First"] [:th "Last"] [:th "Phone"] [:th "Email"]]]
-   [:tbody (map (fn [contact]
-                  [:tr
-                   [:td (:first-name contact)]
-                   [:td (:last-name contact)]
-                   [:td (:phone contact)]
-                   [:td (:email contact)]
-                   [:td
-                    [:a {:href (str "/contacts/" (:id contact) "/edit")} "Edit"]
-                    [:span "&nbsp;"]
-                    [:a {:href (str "/contacts/" (:id contact))} "View"]]]) contacts)
-    (if (= 10 (count contacts))
-      [:tr [:td {:colspan "5" :style "text-align: center;"}
-            [:span {:hx-target "closest tr"
-                    :hx-swap "outerHTML"
-                    :hx-trigger "revealed"
-                    :hx-select "tbody > tr"
-                    :hx-push-url "true"
-                    :hx-get (str "/contacts?page=" (+ page 1))} "Load more"]]]
-      nil)]])
+   [:tbody (apply list (contact-rows contacts page))]])
 
 (defn contacts-view [term contacts page]
-  [:div (search-form term)
+  [:div
+   (search-form term)
    (contacts-table contacts page)
    [:p [:a {:href "/contacts/new"} "Add Contact"]]])
