@@ -19,7 +19,9 @@
                     :hx-get "/contacts"
                     :hx-trigger "keyup delay:300ms changed, search"
                     :hx-target "tbody"
-                    :hx-push-url "true"}]
+                    :hx-push-url "true"
+                    :hx-indicator "#spinner"}]
+           [:img {:id "spinner" :class "htmx-indicator" :src "loading.svg" :style "width: 2em;"}]
            (submit-button "Search")))
 
 (defn contact-rows [contacts page]
