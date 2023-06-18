@@ -1,4 +1,5 @@
-(ns services.contacts-service)
+(ns services.contacts-service 
+  (:require [clojure.string :refer [blank?]]))
 
 (def contacts (atom [{:id 1 :first-name "Foo" :last-name "Bar" :phone "123456789" :email "test@test.com"}
                      {:id 2 :first-name "Bee" :last-name "Lol" :phone "123456789" :email "bee@test.com"}
@@ -47,9 +48,9 @@
                      {:id 45, :first-name "name45", :last-name "lastname45", :phone "12345-45", :email "test45@test.com"}]))
 
 (defn get-contacts [_key value contacts]
-  (if (nil? value)
-    (into [] contacts)
-    (into [] (filter (fn [contact] (= value (_key contact))) contacts))))
+  (if (or (number? value) (not (blank? value)))
+    (into [] (filter (fn [contact] (= value (_key contact))) contacts))
+    (into [] contacts)))
 
 (defn validate-email-existence [contact contacts]
   (let [current-contact (first (get-contacts :email (:email contact) contacts))]
