@@ -7,6 +7,7 @@
 (defroutes app-routes
   (GET "/" request (redirect "/contacts"))
   (GET "/contacts" request handlers/contacts-handler)
+  (GET "/contacts/count" request handlers/contacts-count-handler)
   (GET "/contacts/new" request handlers/add-get-contact-handler)
   (GET "/contacts/:id" request handlers/contact-details-handler)
   (POST "/contacts/:id/edit" request handlers/edit-post-contact-handler)

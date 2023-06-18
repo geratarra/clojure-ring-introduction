@@ -54,4 +54,5 @@
   [:div
    (search-form term)
    (contacts-table contacts page)
-   [:p [:a {:href "/contacts/new"} "Add Contact"]]])
+   [:p [:a {:href "/contacts/new"} "Add Contact"]]
+   [:span {:hx-get "/contacts/count" :hx-trigger "load"}]])

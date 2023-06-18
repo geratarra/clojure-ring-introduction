@@ -59,3 +59,6 @@
     (if (nil? (get-in contact [:email :error]))
       (assoc response :status 200 :body "")
       (assoc response :status 200 :body (get-in contact [:email :error])))))
+
+(defn contacts-count-handler [request]
+  (str "(" (count @contacts) " total Contacts)"))
