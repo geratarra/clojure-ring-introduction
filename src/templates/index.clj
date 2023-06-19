@@ -41,7 +41,7 @@
                                         [:a {:href "#"
                                              :hx-delete (str "/contacts/" (:id contact))
                                              :hx-target "closest tr"
-                                             :hx-swap "outerHTML"
+                                             :hx-swap "outerHTML swap:1s"
                                              :hx-confirm "Are you sure you want to delete this contact?"} "Delete Contact"])]]) contacts))
         scroll-row (when (= 10 (count contacts))
                      [:tr [:td {:colspan "5" :style "text-align: center;"}

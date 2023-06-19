@@ -1,6 +1,6 @@
 (ns core
   (:require [clojure.pprint :as pprint]
-            [hiccup.page :refer [html5 include-js]]
+            [hiccup.page :refer [html5 include-css include-js]]
             [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
             [ring.middleware.params :refer [wrap-params]]
@@ -28,6 +28,6 @@
                  wrap-params
                  wrap-reload
                  (wrap-defaults site-defaults)
-                 (wrap-index (create-head (include-js "htmx.min.js"))))
+                 (wrap-index (create-head (include-js "htmx.min.js") (include-css "main.css"))))
              {:port 3000
               :join? false}))
