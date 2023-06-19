@@ -40,7 +40,8 @@
                                         (anti-forgery-field)
                                         [:a {:href "#"
                                              :hx-delete (str "/contacts/" (:id contact))
-                                             :hx-target "body"
+                                             :hx-target "closest tr"
+                                             :hx-swap "outerHTML"
                                              :hx-confirm "Are you sure you want to delete this contact?"} "Delete Contact"])]]) contacts))
         scroll-row (when (= 10 (count contacts))
                      [:tr [:td {:colspan "5" :style "text-align: center;"}

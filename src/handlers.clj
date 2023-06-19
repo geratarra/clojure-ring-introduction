@@ -47,8 +47,11 @@
       (redirect "/contacts"))))
 
 (defn delete-contact-handler [request]
-  (delete-contact (assoc (keywordize-keys (:params request)) :id (Integer/parseInt (get-in request [:params :id]))) contacts)
-  (redirect "/contacts" 303))
+  (let [hx-trigger (get-in (keywordize-keys request) [:headers :hx-trigger])]
+    (delete-contact (assoc (keywordize-keys (:params request)) :id (Integer/parseInt (get-in request [:params :id]))) contacts)
+    (if (= hx-trigger "delete-btn")
+      (redirect "/contacts" 303)
+      "")))
 
 (defn validate-email-handler [request]
   (let [contact-id (if (= nil (get-in request [:params :id]))
