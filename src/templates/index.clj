@@ -1,6 +1,7 @@
 (ns templates.index
   (:require [hiccup.form :refer [form-to label submit-button]]
-            [hiccup.page :refer [html5]]))
+            [hiccup.page :refer [html5]]
+            [ring.util.anti-forgery :refer [anti-forgery-field]]))
 
 (defn create-html [head body]
   (html5 [:html head [:body {:hx-boost "true"} body]]))
@@ -34,7 +35,13 @@
                               [:td
                                [:a {:href (str "/contacts/" (:id contact) "/edit")} "Edit"]
                                [:span "&nbsp;"]
-                               [:a {:href (str "/contacts/" (:id contact))} "View"]]]) contacts))
+                               [:a {:href (str "/contacts/" (:id contact))} "View"]
+                               (form-to [:post (str "/contacts/" (:id contact) "/delete")]
+                                        (anti-forgery-field)
+                                        [:a {:href "#"
+                                             :hx-delete (str "/contacts/" (:id contact))
+                                             :hx-target "body"
+                                             :hx-confirm "Are you sure you want to delete this contact?"} "Delete Contact"])]]) contacts))
         scroll-row (when (= 10 (count contacts))
                      [:tr [:td {:colspan "5" :style "text-align: center;"}
                            [:span {:id "load-more"

@@ -40,10 +40,4 @@
                                                                 (:phone contact)))
                    [:span {:class "error"} (:error (:phone contact))]]
                   (submit-button "Save")])
-   (form-to [:post (str "/contacts/" (:id contact) "/delete")]
-            (anti-forgery-field)
-            [:button {:hx-delete (str "/contacts/" (:id contact))
-                      :hx-target "body"
-                      :hx-push-url "true"
-                      :hx-confirm "Are you sure you want to delete this contact?"} "Delete Contact"])
    [:p [:a {:href "/contacts"} "Back"]]])
