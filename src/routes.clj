@@ -12,6 +12,7 @@
   (GET "/contacts/:id" request handlers/contact-details-handler)
   (POST "/contacts/:id/edit" request handlers/edit-post-contact-handler)
   (GET "/contacts/:id/edit" request handlers/edit-contact-handler)
+  (DELETE "/contacts" request handlers/delete-contacts-handler)
   (DELETE "/contacts/:id" request handlers/delete-contact-handler)
   (POST "/contacts/new" request handlers/add-post-contact-handler)
   (GET "/contacts/:id/email" request handlers/validate-email-handler)

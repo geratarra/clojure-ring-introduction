@@ -78,7 +78,7 @@
         contact))))
 
 (defn delete-contact [contact contacts]
-  (reset! contacts (filter (fn [_contact] (not= (:id _contact) (:id contact))) @contacts)))
+  (reset! contacts (filterv (fn [_contact] (not= (:id _contact) (:id contact))) @contacts)))
 
 (defn calculate-end-contacts-index [page contacts]
   (if (> (* page 10) (count contacts))

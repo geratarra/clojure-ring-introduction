@@ -1,5 +1,5 @@
 (ns templates.index
-  (:require [hiccup.form :refer [form-to label submit-button]]
+  (:require [hiccup.form :refer [form-to label submit-button hidden-field]]
             [hiccup.page :refer [html5]]
             [ring.util.anti-forgery :refer [anti-forgery-field]]))
 
@@ -28,6 +28,7 @@
 (defn contact-rows [contacts page]
   (let [rows (into [] (map (fn [contact]
                              [:tr
+                              [:td [:input {:type "checkbox" :form "bulk-delete-form" :name "selected_contact_ids" :value (:id contact)}]]
                               [:td (:first-name contact)]
                               [:td (:last-name contact)]
                               [:td (:phone contact)]
@@ -54,9 +55,14 @@
     (apply list (conj rows scroll-row))))
 
 (defn contacts-table [contacts page]
-  [:table {:style "border-collapse: separate; border-spacing: 0em 6em;"}
-   [:thead [:tr [:th "First"] [:th "Last"] [:th "Phone"] [:th "Email"]]]
-   [:tbody (apply list (contact-rows contacts page))]])
+  [:div
+   [:table {:style "border-collapse: separate; border-spacing: 0em 6em;"}
+    [:thead [:tr [:th] [:th "First"] [:th "Last"] [:th "Phone"] [:th "Email"]]]
+    [:tbody (apply list (contact-rows contacts page))]]
+   [:form {:id "bulk-delete-form"}
+    (anti-forgery-field)
+    (hidden-field "page_input" page)
+    [:button {:hx-delete "/contacts" :hx-confirm "Are you sure you want to delete this contact?" :hx-target "body"} "Delete Selected Contacts"]]])
 
 (defn contacts-view [term contacts page]
   [:div

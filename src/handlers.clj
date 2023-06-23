@@ -53,6 +53,17 @@
       (redirect "/contacts" 303)
       "")))
 
+(defn delete-contacts-handler [request] 
+  (let [contact-ids (-> (get-in request [:params :selected_contact_ids])
+                        vector
+                        flatten)
+        page (if (not-empty (get-in request [:params :page_input]))
+               (Integer/parseInt (get-in request [:params :page_input]))
+               1)
+        updated-contacts (doall (map (fn [id] (delete-contact {:id (Integer/parseInt id)} contacts)) contact-ids))
+        contacts-split (subvec (vec @contacts) (- (* page 10) 10) (calculate-end-contacts-index page @contacts))]
+    (html (contacts-view nil contacts-split page))))
+
 (defn validate-email-handler [request]
   (let [contact-id (if (= nil (get-in request [:params :id]))
                      nil
