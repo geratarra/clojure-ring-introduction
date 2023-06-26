@@ -10,8 +10,8 @@
   (let [head [:head]]
     (reduce (fn [acc child] (conj acc child)) head children)))
 
-(defn search-form [term]
-  (form-to [:get "/contacts"]
+(defn search-form-template [term]
+  (form-to {:style "margin: 1em 0em;"} [:get "/contacts"]
            (label "q" "Search Term")
            [:input {:type "search"
                     :id "search"
@@ -25,7 +25,7 @@
            [:img {:id "spinner" :class "htmx-indicator" :src "loading.svg" :style "width: 2em;"}]
            (submit-button "Search")))
 
-(defn contact-rows [contacts page]
+(defn contact-rows-template [contacts page]
   (let [rows (into [] (map (fn [contact]
                              [:tr
                               [:td [:input {:type "checkbox" :form "bulk-delete-form" :name "selected_contact_ids" :value (:id contact)}]]
@@ -58,15 +58,36 @@
   [:div
    [:table {:style "border-collapse: separate; border-spacing: 0em 6em;"}
     [:thead [:tr [:th] [:th "First"] [:th "Last"] [:th "Phone"] [:th "Email"]]]
-    [:tbody (apply list (contact-rows contacts page))]]
+    [:tbody (apply list (contact-rows-template contacts page))]]
    [:form {:id "bulk-delete-form"}
     (anti-forgery-field)
     (hidden-field "page_input" page)
     [:button {:hx-delete "/contacts" :hx-confirm "Are you sure you want to delete this contact?" :hx-target "body"} "Delete Selected Contacts"]]])
 
-(defn contacts-view [term contacts page]
+(defn archive-progress-template [archive]
+  [:div {:hx-get "/contacts/archive/status" :hx-trigger "load delay:1000ms"}
+   "Creating archive..."
+   [:div {:class "progress"}
+    [:div {:class "progress-bar" :id "archive-progress" :role "progressbar"
+           :aria-valuenow (* (:progress archive) 100) :style (str "width: " (* (:progress archive) 100) "%;")}]]])
+
+(defn download-template [archive]
+  [:div {:id "archive-ui" :hx-target "this" :hx-swap "outerHTML"}
+   (case (:status archive)
+     "waiting" [:form {:id "archive-form"}
+                (anti-forgery-field)
+                [:button {:hx-post "/contacts/archive"} "Download Contact Archive"]]
+     "running" (archive-progress-template archive)
+     "complete" [:form
+                 (anti-forgery-field)
+                 [:a {:hx-boost "false" :href "/contacts/archive/file"} "Archive Ready!  Click here to download. &downarrow;"]
+                 [:br]
+                 [:button {:hx-delete "/contacts/archive"} "Clear Download"]])])
+
+(defn contacts-view [term contacts page archive]
   [:div
-   (search-form term)
+   (search-form-template term)
+   (download-template archive)
    (contacts-table contacts page)
    [:p [:a {:href "/contacts/new"} "Add Contact"]]
    [:span {:hx-get "/contacts/count" :hx-trigger "load"}]])

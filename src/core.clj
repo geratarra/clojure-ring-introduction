@@ -1,21 +1,22 @@
 (ns core
-  (:require [clojure.pprint :as pprint]
+  (:require [clojure.pprint :refer [pprint]]
             [hiccup.page :refer [html5 include-css include-js]]
             [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
             [ring.middleware.params :refer [wrap-params]]
             [ring.middleware.reload :refer [wrap-reload]]
             [routes :refer [app-routes]]
-            [templates.index :refer [create-head create-html]]))
+            [templates.index :refer [create-head create-html]]
+            [tea-time.core :as tt]))
 
 (defn wrap-index [handler head]
   (fn [request]
     (let [response (handler request)
           content-type (get-in response [:headers "Content-Type"])]
-      (pprint/pprint "==========REQUEST==========")
-      (pprint/pprint request)
-      (pprint/pprint "==========RESPONSE==========")
-      (pprint/pprint response)
+      (pprint "==========REQUEST==========")
+      (pprint request)
+      (pprint "==========RESPONSE==========")
+      (pprint response)
       (if (and
            (= content-type "text/html; charset=utf-8")
            (or (:include-base-template response)))
@@ -24,6 +25,7 @@
 
 (defn -main [& args]
   (println "Server started at port 3000")
+  (tt/start!)
   (run-jetty (-> #'app-routes
                  wrap-params
                  wrap-reload
