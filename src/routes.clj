@@ -21,5 +21,4 @@
   (POST "/contacts/:id/edit" request handlers/edit-post-contact-handler)
   (GET "/contacts/:id/edit" request handlers/edit-contact-handler)
   (DELETE "/contacts" request handlers/delete-contacts-handler)
-  (DELETE "/contacts/:id" request handlers/delete-contact-handler)
-  (not-found "Page not found"))
+  (DELETE "/contacts/:id" request handlers/delete-contact-handler))
