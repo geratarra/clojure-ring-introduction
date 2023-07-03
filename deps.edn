@@ -2,10 +2,15 @@
  :deps {ring/ring-core {:mvn/version "1.8.2"}
         ring/ring-defaults {:mvn/version "0.3.4"}
         ring/ring-jetty-adapter {:mvn/version "1.8.2"}
-        ring/ring-devel {:mvn/version "1.6.3"}
         ring/ring-json {:mvn/version "0.5.1"}
         ring.middleware.conditional/ring.middleware.conditional {:mvn/version "0.2.0"}
         compojure/compojure {:mvn/version "1.7.0"}
         hiccup/hiccup {:mvn/version "1.0.5"}
         tea-time/tea-time {:mvn/version "1.0.1"}
-        org.clojure/data.json {:mvn/version "1.1.0"}}}
+        org.clojure/data.json {:mvn/version "1.1.0"}}
+ :aliases
+ {:dev {:extra-paths ["dev"]
+        :extra-deps {ring/ring-devel {:mvn/version "1.6.3"}}
+        :main-opts ["-m" "dev-server"]}
+  
+  :prod {:main-opts ["-m" "core"]}}}

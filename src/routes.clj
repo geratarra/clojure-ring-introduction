@@ -1,6 +1,5 @@
 (ns routes
   (:require [compojure.core :refer [context defroutes DELETE GET POST]]
-            [compojure.route :refer [not-found]]
             [handlers]
             [ring.util.response :refer [redirect]]))
 
