@@ -1,18 +1,15 @@
 (ns core
-  (:require [api.api-routes :refer [api-routes]]
-            [routes :refer [app-routes]]
-            [compojure.core :refer [routes]]
-            [compojure.route :refer [not-found]]
-            [hiccup.page :refer [html5 include-css include-js]]
-            [ring.adapter.jetty :refer [run-jetty]]
-            [ring.middleware.anti-forgery :as anti-forgery]
-            [ring.middleware.conditional :refer [if-url-doesnt-match]]
-            [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
-            [ring.middleware.params :refer [wrap-params]]
-            [ring.middleware.stacktrace :refer [wrap-stacktrace]]
-            [ring.middleware.json :refer [wrap-json-response]]
-            [tea-time.core :as tt]
-            [templates.index :refer [create-head create-html]]))
+  (:require
+   [web-app-utils :refer [combined-routes]]
+   [hiccup.page :refer [html5 include-css include-js]]
+   [ring.adapter.jetty :refer [run-jetty]]
+   [ring.middleware.anti-forgery :as anti-forgery]
+   [ring.middleware.conditional :refer [if-url-doesnt-match]]
+   [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
+   [ring.middleware.params :refer [wrap-params]]
+   [ring.middleware.stacktrace :refer [wrap-stacktrace]]
+   [tea-time.core :as tt]
+   [templates.index :refer [create-head create-html]]))
 
 (defn wrap-index [handler head]
   (fn [request]
@@ -23,11 +20,6 @@
            (true? (:include-base-template response)))
         (update response :body (fn [body] (html5 (create-html head body))))
         response))))
-
-(def combined-routes
-  (routes app-routes
-          (wrap-json-response api-routes)
-          (not-found "Page not found")))
 
 (defn -main [& args]
   (println "Server started at port 3000")

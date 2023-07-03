@@ -1,9 +1,6 @@
 (ns dev-server
-  (:require [api.api-routes :refer [api-routes]]
-            [routes :refer [app-routes]]
+  (:require [web-app-utils :refer [combined-routes]]
             [clojure.pprint :refer [pprint]]
-            [compojure.core :refer [routes]]
-            [compojure.route :refer [not-found]]
             [hiccup.page :refer [html5 include-css include-js]]
             [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.anti-forgery :as anti-forgery]
@@ -12,7 +9,6 @@
             [ring.middleware.params :refer [wrap-params]]
             [ring.middleware.reload :refer [wrap-reload]]
             [ring.middleware.stacktrace :refer [wrap-stacktrace]]
-            [ring.middleware.json :refer [wrap-json-response]]
             [tea-time.core :as tt]
             [templates.index :refer [create-head create-html]]))
 
@@ -29,11 +25,6 @@
            (true? (:include-base-template response)))
         (update response :body (fn [body] (html5 (create-html head body))))
         response))))
-
-(def combined-routes
-  (routes app-routes
-          (wrap-json-response api-routes)
-          (not-found "Page not found")))
 
 (defn -main [& args]
   (println "Server started at port 3000")
