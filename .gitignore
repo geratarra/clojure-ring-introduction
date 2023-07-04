@@ -5,3 +5,4 @@ src/.DS_Store
 .cpcache
 .lsp/
 .nrepl-port
+target/*

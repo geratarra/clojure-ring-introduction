@@ -13,4 +13,6 @@
         :extra-deps {ring/ring-devel {:mvn/version "1.6.3"}}
         :main-opts ["-m" "dev-server"]}
   
-  :prod {:main-opts ["-m" "core"]}}}
+  :prod {:main-opts ["-m" "core"]}
+  :build {:deps {io.github.clojure/tools.build {:git/tag "v0.9.4" :git/sha "76b78fe"}}
+            :ns-default build}}}

@@ -9,7 +9,8 @@
    [ring.middleware.params :refer [wrap-params]]
    [ring.middleware.stacktrace :refer [wrap-stacktrace]]
    [tea-time.core :as tt]
-   [templates.index :refer [create-head create-html]]))
+   [templates.index :refer [create-head create-html]])
+  (:gen-class))
 
 (defn wrap-index [handler head]
   (fn [request]
