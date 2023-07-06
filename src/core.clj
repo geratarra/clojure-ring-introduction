@@ -32,4 +32,5 @@
                  (wrap-defaults (assoc-in site-defaults [:security :anti-forgery] false))
                  wrap-stacktrace)
              {:port 3000
+              :host "0.0.0.0"
               :join? false}))
