@@ -56,7 +56,7 @@ jobs:
           restore-keys: cljdeps-
 
       - name: Execute clojure code
-        run: clj -T:build uber
+        run: clojure -T:build uber
         
 #       - name: Get leiningen version
 #         run: lein -v
