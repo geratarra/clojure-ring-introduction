@@ -4,7 +4,7 @@
                                                                     delete-contact edit-contact get-contacts]]))
 
 (defn contacts-handler [request]
-  (response {:contacts contacts}))
+  (response {:contacts @contacts}))
 
 (defn add-post-contact-handler [request]
   (let [new-contact (add-contact (:params request) contacts-service/contacts)]
