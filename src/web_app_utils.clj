@@ -1,11 +1,14 @@
 (ns web-app-utils 
-  (:require [compojure.core :refer [routes]]
+  (:require [api.api-routes :refer [api-routes]]
+            [compojure.core :refer [GET routes]]
             [compojure.route :refer [not-found]]
-            [api.api-routes :refer [api-routes]]
-            [routes :refer [app-routes]]
-            [ring.middleware.json :refer [wrap-json-response]]))
+            [ring.middleware.json :refer [wrap-json-response]]
+            [routes :refer [app-routes]]))
+
+(def listening-port 8080)
 
 (def combined-routes
-  (routes app-routes
-          (wrap-json-response api-routes)
-          (not-found "Page not found")))
+  (routes
+   app-routes
+   (wrap-json-response api-routes)
+   (not-found "Page not found")))

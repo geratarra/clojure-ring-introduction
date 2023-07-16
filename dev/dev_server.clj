@@ -1,6 +1,5 @@
 (ns dev-server
-  (:require [web-app-utils :refer [combined-routes]]
-            [clojure.pprint :refer [pprint]]
+  (:require [clojure.pprint :refer [pprint]]
             [hiccup.page :refer [html5 include-css include-js]]
             [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.anti-forgery :as anti-forgery]
@@ -10,7 +9,8 @@
             [ring.middleware.reload :refer [wrap-reload]]
             [ring.middleware.stacktrace :refer [wrap-stacktrace]]
             [tea-time.core :as tt]
-            [templates.index :refer [create-head create-html]]))
+            [templates.index :refer [create-head create-html]]
+            [web-app-utils :refer [combined-routes listening-port]]))
 
 (defn wrap-index [handler head]
   (fn [request]
@@ -27,7 +27,7 @@
         response))))
 
 (defn -main [& args]
-  (println "Server started at port 3000")
+  (println (str "Server started at port " listening-port))
   (tt/start!)
   (run-jetty (-> combined-routes
                  wrap-params
@@ -36,5 +36,5 @@
                  (wrap-index (create-head (include-js "htmx.min.js") (include-css "main.css")))
                  (wrap-defaults (assoc-in site-defaults [:security :anti-forgery] false))
                  wrap-stacktrace)
-             {:port 3000
+             {:port listening-port
               :join? false}))
