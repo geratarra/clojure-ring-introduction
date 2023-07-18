@@ -45,7 +45,8 @@
                      {:id 42, :first-name "name42", :last-name "lastname42", :phone "12345-42", :email "test42@test.com"}
                      {:id 43, :first-name "name43", :last-name "lastname43", :phone "12345-43", :email "test43@test.com"}
                      {:id 44, :first-name "name44", :last-name "lastname44", :phone "12345-44", :email "test44@test.com"}
-                     {:id 45, :first-name "name45", :last-name "lastname45", :phone "12345-45", :email "test45@test.com"}]))
+                     {:id 45, :first-name "name45", :last-name "lastname45", :phone "12345-45", :email "test45@test.com"}
+                     {:id 46, :first-name "name46", :last-name "lastname46", :phone "12346-46", :email "test46@test.com"}]))
 
 (defn get-contacts [_key value contacts]
   (if (or (number? value) (not (blank? value)))
